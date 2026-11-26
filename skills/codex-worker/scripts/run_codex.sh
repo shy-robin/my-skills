@@ -72,7 +72,7 @@ if [[ -n "$SESSION_ID" ]]; then
   codex exec resume "$SESSION_ID" "${MODEL_ARGS[@]}" --json -o "$SUMMARY_FILE" - <<< "$PROMPT" > "$LOG_FILE" 2>&1
   EXIT_CODE=$?
 else
-  codex exec -s workspace-write --approve-for-me "${MODEL_ARGS[@]}" --json -o "$SUMMARY_FILE" - <<< "$PROMPT" > "$LOG_FILE" 2>&1
+  codex exec --approve-for-me "${MODEL_ARGS[@]}" --json -o "$SUMMARY_FILE" - <<< "$PROMPT" > "$LOG_FILE" 2>&1
   EXIT_CODE=$?
 fi
 set -e

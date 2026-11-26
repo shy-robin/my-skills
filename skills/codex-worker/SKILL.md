@@ -72,4 +72,5 @@ description: 使用当前 Agent（AGY）负责制定精准方案与 Code Review�
 * **永远使用显式 `SESSION_ID`**，不要用 `--last`，确保同一目录或多 worktree 并行时绝不串话。
 * **保持方案文件精炼具体**，帮 Codex 省去满仓库盲搜的开销。
 * **只读 `SUMMARY_FILE` + `git diff`**，不要把 Codex 的完整事件流灌进 AGY 上下文。
-* **不要随意开启 `--dangerously-bypass-approvals-and-sandbox`**，保持默认的沙箱与安全边界。
+* **不要随意开启 `--dangerously-bypass-approvals-and-sandbox`**，保持 `--approve-for-me` 默认的 `workspace-write` 沙箱与安全边界。
+* **人工查看历史会话**：`codex exec` 创建的是非交互会话，若要在交互式选择器里查看，请使用 `codex resume --include-non-interactive`（跨目录加 `--all`），或直接 `codex resume <SESSION_ID>`。
