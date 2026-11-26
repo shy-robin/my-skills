@@ -6,6 +6,7 @@ SESSION_ID=""
 PROMPT=""
 PROMPT_FILE=""
 MODEL=""
+EFFORT=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -29,10 +30,14 @@ while [[ $# -gt 0 ]]; do
       MODEL="$2"
       shift 2
       ;;
+    --effort)
+      EFFORT="$2"
+      shift 2
+      ;;
     -h|--help)
       cat <<'USAGE'
 用法:
-  run_codex.sh [--cwd <dir>] [--session <uuid>] [--model <model>] (--prompt "<text>" | --prompt-file <file>)
+  run_codex.sh [--cwd <dir>] [--session <uuid>] [--model <model>] [--effort <low|medium|high>] (--prompt "<text>" | --prompt-file <file>)
 USAGE
       exit 0
       ;;
@@ -62,17 +67,20 @@ SUMMARY_FILE="/tmp/codex-worker-${RUN_ID}.md"
 
 cd "$CWD"
 
-MODEL_ARGS=()
+EXTRA_ARGS=()
 if [[ -n "$MODEL" ]]; then
-  MODEL_ARGS=(-m "$MODEL")
+  EXTRA_ARGS+=(-m "$MODEL")
+fi
+if [[ -n "$EFFORT" ]]; then
+  EXTRA_ARGS+=(-c "model_reasoning_effort=\"${EFFORT}\"")
 fi
 
 set +e
 if [[ -n "$SESSION_ID" ]]; then
-  codex exec resume "$SESSION_ID" "${MODEL_ARGS[@]}" --json -o "$SUMMARY_FILE" - <<< "$PROMPT" > "$LOG_FILE" 2>&1
+  codex exec resume "$SESSION_ID" "${EXTRA_ARGS[@]}" --json -o "$SUMMARY_FILE" - <<< "$PROMPT" > "$LOG_FILE" 2>&1
   EXIT_CODE=$?
 else
-  codex exec --approve-for-me "${MODEL_ARGS[@]}" --json -o "$SUMMARY_FILE" - <<< "$PROMPT" > "$LOG_FILE" 2>&1
+  codex exec --approve-for-me "${EXTRA_ARGS[@]}" --json -o "$SUMMARY_FILE" - <<< "$PROMPT" > "$LOG_FILE" 2>&1
   EXIT_CODE=$?
 fi
 set -e

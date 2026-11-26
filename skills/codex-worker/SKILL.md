@@ -19,6 +19,7 @@ description: 使用当前 Agent（AGY）负责制定精准方案与 Code Review�
   ```bash
   ~/.gemini/config/skills/codex-worker/scripts/run_codex.sh \
     --cwd "<项目或 worktree 路径>" \
+    [--effort low|medium|high] \
     --prompt-file "<任务说明文件>"
   ```
 * **打回修改**（必须显式传回上一轮返回的 `SESSION_ID`，**严禁使用 `--last`**）：
@@ -26,8 +27,14 @@ description: 使用当前 Agent（AGY）负责制定精准方案与 Code Review�
   ~/.gemini/config/skills/codex-worker/scripts/run_codex.sh \
     --cwd "<项目或 worktree 路径>" \
     --session "<SESSION_ID>" \
+    [--effort low|medium|high] \
     --prompt-file "<Review 意见文件>"
   ```
+
+### 分工与推理档位建议
+* **纯前端 UI 视觉 / 设计稿还原**：优先由当前 Agent（Gemini 4 Neon）直接完成，不必强行绕道委派给 Codex。
+* **后端核心逻辑、复杂 TS 类型/状态机、精准重构、单测驱动修复**：优先委派给 Codex 执行。
+* **`--effort` 档位**：日常简单任务省略（默认沿用本机配置的 `low`）；涉及复杂并发、算法、疑难 Bug 或高风险重构时传 `--effort medium` 或 `high`。
 
 脚本会自动：
 1. 将 Codex 的 `--json` 过程日志重定向到 `/tmp/codex-worker-*.jsonl`，**不污染当前上下文**；
