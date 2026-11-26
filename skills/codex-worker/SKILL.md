@@ -62,7 +62,7 @@ description: 使用当前 Agent（AGY）负责制定精准方案与 Code Review�
 
 ### 第 3 步：Code Review 与验证
 1. 在目标目录执行 `git status --short` 和 `git diff`（只审查实际变更，不重复通读整个仓库）。
-2. 运行对应的测试、类型检查或构建命令验证改动。
+2. 运行对应的测试、类型检查或构建命令验证改动（**注意**：禁止裸用 `npx <pkg>` 避免卡在 `Ok to proceed? (y)`，优先用项目 scripts 或加 `npx --no-install` / `npx --yes`）。
 3. 核对是否满足第 1 步方案中的所有要求，以及是否存在逻辑 bug、遗漏边界或多余改动。
 
 ### 第 4 步：精准打回修改（最多 2 轮）
